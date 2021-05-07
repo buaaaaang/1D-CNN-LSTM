@@ -5,8 +5,8 @@ from keras import optimizers
 
 
 def model():#hp):
-    shape = (64000,1)
-    unit = 32 #256
+    shape = (128000,1)
+    unit = 128
 
     model = Sequential(name='1D')
 
@@ -31,20 +31,20 @@ def model():#hp):
     model.add(layers.Activation('elu'))
     model.add(layers.MaxPooling1D(pool_size=4, strides=4))
 
-    #model.add(layers.LSTM(units=hp.Int('units',32,512,step=32)))
     model.add(layers.LSTM(units=unit))
 
     model.add(layers.Dense(units=5,activation='softmax'))
     
-
-    #adam = optimizers.Adam(lr=hp.Float('lr',1e-5,1e-2,sampling='log'))
-    adam = optimizers.Adam(lr=0.001)
-    model.compile(optimizer=adam,loss='categorical_crossentropy',metrics=['categorical_accuracy'])
+    #opt = optimizers.Adam(lr=0.0001)
+    opt = optimizers.SGD(lr = 0.0001, decay=1e-6, momentum=0.9, nesterov=True)
+    model.compile(optimizer=opt,loss='categorical_crossentropy',metrics=['categorical_accuracy'])
 
     return model
 
 
 if __name__ == "__main__":
+    #hyperparamter tuning
+    '''
     import kerastuner as kt
     import IPython
     import h5py
@@ -58,7 +58,7 @@ if __name__ == "__main__":
     x_v = (hf['x'][16000:20000])[:,:,newaxis]
     x_t = (hf['x'][20000:])[:,:,newaxis]
 
-    Y = np.int8(hf['y'])
+    Y = hf['y']
     y = np.zeros((Y.size,5))
     y[np.arange(Y.size),Y] = 1
     y_tr = y[:16000]
@@ -71,6 +71,7 @@ if __name__ == "__main__":
     best_hps = tuner.get_best_hyperparameters(num_trials=1)[0]
     print(best_hps['lr'])
     print(best_hps['units'])
+    '''
     
     
     

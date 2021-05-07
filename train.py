@@ -37,7 +37,7 @@ if __name__ == "__main__":
     x_v = (hf['x'][16000:20000])[:,:,newaxis]
     x_t = (hf['x'][20000:])[:,:,newaxis]
 
-    Y = np.int8(hf['y'])
+    Y = hf['y']
     y = np.zeros((Y.size,5))
     y[np.arange(Y.size),Y] = 1.0
     y_tr = y[:16000]
